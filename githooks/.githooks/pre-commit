@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+status=0
+
+if command -v pre-commit >/dev/null 2>&1; then
+  # 1) Run repo-local hooks if present
+  if [ -f .pre-commit-config.yaml ] || [ -f .pre-commit-config.yml ]; then
+    pre-commit run --hook-stage commit || status=$?
+  fi
+  # 2) Run global hooks (Vale etc.) via dotfiles-managed config
+  if [ -f "$HOME/.config/pre-commit/global.yaml" ]; then
+    pre-commit run --hook-stage commit -c "$HOME/.config/pre-commit/global.yaml" || status=$?
+  fi
+fi
+
+exit $status
