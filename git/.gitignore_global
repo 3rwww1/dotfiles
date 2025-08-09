@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# Editors
+*.swp
+*.swo
+*.bak
+*~
+.idea/
+.vscode/
+
+# Archives
+*.zip
+*.tar
+*.tgz
+*.gz
+
+# Misc
+.env.local

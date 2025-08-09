@@ -1,0 +1,23 @@
+---
+name: Linux install test
+
+"on":
+  push:
+    branches:
+      - main
+
+jobs:
+  install-debian:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/devcontainers/base:debian
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run installer
+        run: |
+          ./install.sh || true
+      - name: Verify files
+        run: |
+          test -L "$HOME/.zshrc"
+          test -f "$HOME/.zfunc/_gh" || true

@@ -1,0 +1,25 @@
+---
+description: mise and direnv configuration standards
+globs:
+  - ".tool-versions"
+  - ".envrc"
+  - "templates/mise/**"
+  - "templates/direnv/**"
+alwaysApply: false
+---
+
+# mise + direnv Standards
+
+## Activation and Integration
+
+- In zsh, initialize in this order (interactive shells):
+  1. `eval "$(direnv hook zsh)"`
+  2. `eval "$(mise activate zsh)"` (global defaults when not in a direnv dir)
+  3. `eval "$(mise direnv activate)"` (auto-switch per-dir)
+- `.envrc` should include a shebang, `watch_file` hooks, and optional `mise install` advisory
+
+## Tool Version Management
+
+- Do not list `corepack` in `.tool-versions`
+- Global Ruby and Node are managed by mise (latest). Terraform via mise as well.
+- Repo-level pins via .tool-versions remain the source of truth; direnv activates them automatically.

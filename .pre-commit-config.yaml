@@ -1,0 +1,56 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+      - id: check-json
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: ["-s", "bash", "-x"]
+        files: >
+          ^(install\.sh|scripts/.*\.sh|templates/direnv/.*\.envrc|direnv/\.config/direnv/direnvrc)$
+        additional_dependencies: []
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.10.0-1
+    hooks:
+      - id: shfmt
+        args: [-i, "2", -ci, -sr]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        args: [--disable, MD013]
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-s]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+        args: ["protect", "--staged", "--redact"]
+
+  # Zsh syntax check for zsh dotfiles
+  - repo: local
+    hooks:
+      - id: zsh-syntax-check
+        name: zsh -n on zsh dotfiles
+        entry: zsh -n zsh/.zshrc zsh/.zshenv zsh/.zprofile
+        language: system
+        pass_filenames: false

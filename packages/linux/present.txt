@@ -1,0 +1,19 @@
+# Linux packages to ensure present via apt-get
+# core tools
+curl
+ca-certificates
+ripgrep
+fzf
+zoxide
+bat
+fd-find
+stow
+zsh
+git
+jq
+tmux
+htop
+shellcheck
+python3-pip
+unzip
+# languages (managed by mise globally)

@@ -1,0 +1,25 @@
+---
+description: Project structure and phase organization for dotfiles installation
+globs:
+  - "install.sh"
+  - "scripts/phases/**"
+alwaysApply: false
+---
+
+# Project Structure Standards
+
+## Phase Organization
+
+- No global code in sourced files; each phase exposes a function named after the file (e.g., `bootstrap`, `package_sync`, `self_test`) under `scripts/phases`
+- `install.sh` sources all phase modules at the top, then calls their functions in sequence
+- OS-specific bootstrap helpers are sourced by the `bootstrap` phase under `scripts/phases/bootstrap/`
+
+## Indentation Management
+
+- Use a single indent variable in `install.sh`; pass it to phase functions
+- IND maps to spaces via `indent_str` with indent size 2
+
+## File Organization
+
+- Include: scripts/**/*.sh, scripts/**, **/*.sh, install.sh, zsh/**, direnv/**, packages/**, brew/**
+- Exclude: **/.git/**, **/node_modules/**, **/.terraform/**, **/vendor/**, **/build/**, **/dist/**, **/.cache/**

@@ -1,0 +1,16 @@
+{
+  "name": "Dotfiles Devcontainer (Debian)",
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-vscode.makefile-tools",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+  "postCreateCommand": "./install.sh",
+  "remoteUser": "vscode"
+}

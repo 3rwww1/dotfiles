@@ -1,0 +1,43 @@
+{
+    "window.commandCenter": true,
+    "workbench.colorTheme": "Default Dark Modern",
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": false,
+    "files.exclude": {
+        "**/.trunk/*actions/": true,
+        "**/.trunk/*logs/": true,
+        "**/.trunk/*notifications/": true,
+        "**/.trunk/*out/": true,
+        "**/.trunk/*plugins/": true
+    },
+    "files.watcherExclude": {
+        "**/.trunk/*actions/": true,
+        "**/.trunk/*logs/": true,
+        "**/.trunk/*notifications/": true,
+        "**/.trunk/*out/": true,
+        "**/.trunk/*plugins/": true
+    },
+    "files.autoSave": "onFocusChange",
+    "editor.tabSize": 2,
+    "editor.renderWhitespace": "all",
+    "editor.cursorStyle": "block",
+    "window.autoDetectColorScheme": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "git.autofetch": true,
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "diffEditor.hideUnchangedRegions.enabled": true,
+    "workbench.preferredHighContrastColorTheme": "Default Dark Modern",
+    "workbench.preferredHighContrastLightColorTheme": "Default Light Modern",
+    "workbench.preferredLightColorTheme": "Default Light Modern",
+    "window.systemColorTheme": "dark",
+    "jupyter.themeMatplotlibPlots": true,
+    "markdown-preview-enhanced.mermaidTheme": "dark",
+    "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "redhat.telemetry.enabled": false,
+    "shellcheck.customArgs": [
+      "--external-sources"
+    ]
+}

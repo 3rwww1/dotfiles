@@ -1,0 +1,18 @@
+---
+description: General coding standards and editing practices
+alwaysApply: true
+---
+
+# Coding Standards
+
+## Code Editing Practices
+
+- Implement changes directly via edits; don't paste large diffs in chat
+- Keep edits scoped and readable; match existing style and formatting
+- Avoid unrelated refactors in the same edit
+
+## Communication Style
+
+- Prefer concise, high-signal replies with minimal fluff
+- Use headings and bullet points; avoid walls of text
+- Format filenames/paths/functions/classes with backticks

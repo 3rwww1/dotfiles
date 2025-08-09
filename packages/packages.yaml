@@ -1,0 +1,52 @@
+---
+packages:
+  common:
+    present:
+      - direnv
+      - git
+      - zsh
+      - stow
+      - jq
+      - mise
+      - ripgrep
+      - fzf
+      - eza
+      - bat
+      - tmux
+      - htop
+      - shfmt
+      - kubectl
+      - gh
+      - trivy
+      - node
+      - deno
+      - python
+      - go
+      - zoxide
+      - fd-find
+      - shellcheck
+      - python3-pip
+      - unzip
+    absent:
+      - yarn
+    mise:
+      - go
+      - rust
+      - ruby
+      - node
+      - python
+      - deno
+      - terraform
+
+  linux:
+    present: []
+    absent:
+      - go
+      - rust
+      - terraform
+
+  macos:
+    present:
+      - vale
+      - vim
+      - neovim

@@ -1,0 +1,22 @@
+---
+description: Package management policy and standards
+globs:
+  - "packages/**"
+  - "brew/**"
+  - "scripts/apply-packages.sh"
+alwaysApply: false
+---
+
+# Package Management Standards
+
+## Single Source of Truth
+
+- Single source of truth under packages/
+- macOS present via packages/macos/Brewfile; Linux present via plaintext lists
+- Common overlays in packages/common/{present,absent}.txt
+- Apply policy in phase 03 only (no installs in bootstraps)
+
+## Platform-Specific Rules
+
+- macOS: use Homebrew; Linux: apt; avoid privileged ops in CI
+- Test install.sh on both macOS and Debian containers

@@ -1,0 +1,45 @@
+# Cursor Rules for tools/dotfiles
+
+# Messaging
+- Prefer concise, high-signal replies with minimal fluff.
+- Use headings and bullet points; avoid walls of text.
+- Format filenames/paths/functions/classes with backticks.
+
+# Code edits
+- Implement changes directly via edits; don’t paste large diffs in chat.
+- Keep edits scoped and readable; match existing style and formatting.
+- Avoid unrelated refactors in the same edit.
+
+# Shell & scripts
+- Target POSIX sh where possible; guard macOS vs Linux paths.
+- Avoid Bash 4+ only features (e.g. mapfile); prefer portable constructs.
+- Quote paths with spaces; fail fast on errors; be idempotent.
+
+# Zsh config
+- Use `bindkey -e` and native keybindings unless explicitly overridden.
+- Configure completions via `fpath` and `compinit`; avoid insecure dirs.
+- Load Homebrew plugins conditionally; keep `~/.zfunc` and `~/.zsh/completions` tidy.
+
+# mise + direnv
+- Use `eval "$(mise direnv activate)"` or `eval "$(mise activate)"` in zsh.
+- `.envrc` should include a shebang, `watch_file` hooks, and optional `mise install` advisory.
+- Do not list `corepack` in `.tool-versions`.
+- When no `.tool-versions` exists, pin tools to the latest minor version (avoid floating `latest`).
+
+# Terraform
+- Do not set `TF_PLUGIN_CACHE_DIR` (no shared/global cache).
+
+# Pre-commit
+- Keep hooks fast and non-flaky; scope shellcheck to sh files, validate zsh with `zsh -n`.
+- For Vale, prefer project-local config and allow fallback to user config.
+
+# CI
+- macOS: use Homebrew; Linux: apt; avoid privileged ops in CI.
+- Test `install.sh` on both macOS and Debian containers.
+
+# Stow
+- Back up conflicting files before linking; keep `cursor`/`ghostty` Darwin-only.
+
+# Git hygiene
+- Avoid committing secrets; enforce gitleaks.
+- Favor small, purposeful commits with clear messages focusing on why.

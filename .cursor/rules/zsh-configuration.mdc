@@ -1,0 +1,20 @@
+---
+description: Zsh configuration standards and completion management
+globs:
+  - "zsh/**"
+  - "scripts/install-completions.sh"
+alwaysApply: false
+---
+
+# Zsh Configuration Standards
+
+## Keybindings and Configuration
+
+- Use `bindkey -e` and native keybindings unless explicitly overridden
+- Configure completions via `fpath` and `compinit`; avoid insecure dirs
+- Load Homebrew plugins conditionally; keep `~/.zfunc` and `~/.zsh/completions` tidy
+
+## Completions Management
+
+- install-completions.sh must be idempotent and OS-agnostic
+- Link into ~/.zfunc and never write to system completion directories

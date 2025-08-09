@@ -1,0 +1,59 @@
+---
+description: Shell scripting standards and logging for dotfiles project
+globs:
+  - "scripts/**/*.sh"
+  - "**/*.sh"
+  - "install.sh"
+alwaysApply: false
+---
+
+# Shell Scripting Standards
+
+## Functions & Variables
+
+- Prefer functions over inline code; keep functions small and composable.
+- Local variables MUST be lowercase.
+- Environment and global variables MUST be UPPERCASE.
+- Functions should be max 30 lines of code.
+- Required variables/arguments must be present; do not use default expansions to mask unset values.
+  Example: `: "${1:?arg1 required}"`.
+- Optional external environment variables may be probed for presence safely with `${VAR+x}` and read
+  with `${VAR-}` after a presence check.
+- Do not use `${var:-default}` for required inputs when `set -u` is enabled.
+- Always reference variables as `${VAR}` not `$VAR` for clarity and to avoid edge cases in parsing.
+- Never use inline control structures. Always expand to multi-line:
+  - Avoid `if cond; then ...; fi` → use multi-line `if ...; then` with body on separate lines
+  - Avoid `for x in ...; do ...; done` → loop body on separate lines
+- When using `|| { ... }` or `&& { ... }` blocks, place the opening `{` and closing `}` on their
+  own lines with the body indented inside. Exception: the opening `{` must remain on the same line as
+  the operator (e.g., `cmd || {`), not on its own line.
+- Do not use `;` to chain statements. Place each statement on its own line for readability and diffs.
+
+## Shell Targets & Compatibility
+
+- Target Bash (and Zsh-compatible) primarily; POSIX sh compatibility is not required.
+- Prefer `source` over `.` for readability when sourcing files.
+- Avoid `trap` for cleanup; only use if no safer alternative. Prefer designs that avoid temp files (e.g., process substitution) or explicit cleanup near the end of the function.
+- Avoid Bash 4+ only features where not necessary for maintainability; if used, document rationale.
+- Quote paths with spaces; fail fast on errors; be idempotent.
+- Always `set -euo pipefail` at the head of all scripts.
+
+## Logging Standards
+
+- Always use the provided log functions from scripts/helpers/log.sh
+- Labels must be flush-left; message text is indented by the provided indent parameter only
+- External commands must go through log_cmd with proper indent
+- Internal scripts must log inside themselves and return non-zero on error; callers log FAIL and exit 1
+- INFO/OK/WARN/FAIL are the only accepted tags for user-facing messages
+- Logger tags must be fixed-width to 6 chars and left-aligned (as implemented)
+- Phases are bold cyan, no indentation and no tag prefix
+- Standardize installer messages across all tech (apt, brew, mise, corepack, gem):
+  - "X is already installed" when present
+  - "Installing X via `<tech>`" when starting an install
+  - "Failed to install X via `<tech>`" on error
+
+## Error Handling
+
+- On any non-zero return from internal scripts, print FAIL with indent and exit 1 from the phase
+- External command failures must surface via log_cmd; capture and print output in color (magenta success, red failure)
+- Scripts should run non-interactively; avoid sudo prompts unless explicitly documented

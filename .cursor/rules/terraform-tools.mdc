@@ -1,0 +1,15 @@
+---
+description: Terraform and infrastructure tool standards
+globs:
+  - "**/*.tf"
+  - "**/.tool-versions"
+alwaysApply: false
+---
+
+# Terraform Standards
+
+## Tool Management
+
+- Global terraform is managed by mise only; do not use tfenv
+- Repo-level pins via .tool-versions remain the source of truth
+- Do not set `TF_PLUGIN_CACHE_DIR` (no shared/global cache)

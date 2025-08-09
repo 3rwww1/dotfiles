@@ -1,0 +1,37 @@
+[user]
+	email = e.queffelec@go-electra.com
+	name = Erwan Queffélec
+[color]
+	ui = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[pull]
+	rebase = true
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+[merge]
+	conflictstyle = zdiff3
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore_global
+	hooksPath = /Users/e.queffelec@go-electra.com/.githooks
+[add "interactive"]
+	useBuiltin = true

@@ -1,0 +1,21 @@
+---
+description: Git workflow and pre-commit hook standards
+globs:
+  - ".pre-commit-config.yaml"
+  - ".gitleaks.toml"
+alwaysApply: false
+---
+
+# Git and Pre-commit Standards
+
+## Git Hygiene
+
+- Avoid committing secrets; enforce gitleaks
+- Favor small, purposeful commits with clear messages focusing on why
+- Do not create branches or push without explicit user request
+- Before resolving merge conflicts, review and understand all commits not on `main`
+
+## Pre-commit Hooks
+
+- Keep hooks fast and non-flaky; scope shellcheck to sh files, validate zsh with `zsh -n`
+- For Vale, prefer project-local config and allow fallback to user config

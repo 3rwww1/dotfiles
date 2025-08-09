@@ -1,0 +1,19 @@
+---
+description: GNU Stow configuration and file linking standards
+globs:
+  - "scripts/stow-all.sh"
+  - "cursor/**"
+  - "ghostty/**"
+alwaysApply: false
+---
+
+# Stow Management Standards
+
+## Idempotent Operations
+
+- stow-all.sh must be idempotent; never overwrite non-stow owned files silently
+- Back up conflicting files before linking; keep `cursor`/`ghostty` Darwin-only
+
+## Platform-Specific Stowing
+
+- Ghostty and Cursor are stowed only on macOS

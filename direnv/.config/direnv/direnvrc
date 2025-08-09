@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Global direnv configuration (mise-centric)
+# - Runtime versions: via mise (.tool-versions / .mise.toml)
+# - Python venv: auto-activate .venv if present
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise direnv activate)"
+fi
+
+# Optional: auto-activate local Python venv named .venv
+if [ -d .venv ]; then
+  layout python
+fi

@@ -1,0 +1,11 @@
+right_format = """$time"""
+
+[time]
+disabled = false
+time_format = '%T'
+style = 'bold yellow'
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+home_symbol = "~"
