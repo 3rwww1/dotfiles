@@ -39,7 +39,6 @@ repos:
     hooks:
       - id: yamllint
         args: [-s]
-        exclude: ^\.github/workflows/
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.4

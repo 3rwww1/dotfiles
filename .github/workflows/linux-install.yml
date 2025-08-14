@@ -1,9 +1,10 @@
+---
 name: Linux install test
 
-on:
+"on":
   push:
-    branches: [ main ]
-  pull_request:
+    branches:
+      - main
 
 jobs:
   install-debian:
@@ -18,5 +19,5 @@ jobs:
           ./install.sh || true
       - name: Verify files
         run: |
-          test -L $HOME/.zshrc
-          test -f $HOME/.zfunc/_gh || true
+          test -L "$HOME/.zshrc"
+          test -f "$HOME/.zfunc/_gh" || true

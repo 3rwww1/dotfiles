@@ -1,9 +1,10 @@
+---
 name: macOS install test
 
-on:
+"on":
   push:
-    branches: [ main ]
-  pull_request:
+    branches:
+      - main
 
 jobs:
   install-macos:
