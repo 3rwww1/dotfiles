@@ -1,39 +1,13 @@
-# Global direnv configuration
-# - Ruby: activate via rbenv (if .ruby-version present)
-# - Node.js: via mise (if .tool-versions or .mise.toml present)
-# - Terraform: via tfenv (if .terraform-version present)
-# - Python: activate venv (if .venv exists)
+#!/usr/bin/env bash
+# Global direnv configuration (mise-centric)
+# - Runtime versions: via mise (.tool-versions / .mise.toml)
+# - Python venv: auto-activate .venv if present
 
-# Ruby via rbenv
-layout_rbenv() {
-  if command -v rbenv >/dev/null 2>&1; then
-    export RBENV_VERSION="$(< .ruby-version 2>/dev/null || true)"
-    eval "$(rbenv init -)"
-  fi
-}
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise direnv activate)"
+fi
 
-# Node & others via mise (rtx)
-use_mise() {
-  if command -v mise >/dev/null 2>&1; then
-    eval "$(~/.local/bin/mise activate zsh)"
-  fi
-}
-
-# Terraform via tfenv
-use_tfenv() {
-  if command -v tfenv >/dev/null 2>&1; then
-    if [ -f .terraform-version ]; then
-      tfenv install >/dev/null 2>&1 || true
-      tfenv use >/dev/null 2>&1 || true
-    fi
-  fi
-}
-
-# Python virtualenv
-layout_python_venv() {
-  if [ -d .venv ]; then
-    VIRTUAL_ENV=.venv
-    PATH_add "$PWD/.venv/bin"
-    export VIRTUAL_ENV
-  fi
-}
+# Optional: auto-activate local Python venv named .venv
+if [ -d .venv ]; then
+  layout python
+fi

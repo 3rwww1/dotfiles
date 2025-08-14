@@ -17,6 +17,9 @@ repos:
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
+        args: ["-s", "bash", "-x"]
+        files: >
+          ^(install\.sh|scripts/.*\.sh|templates/direnv/.*\.envrc|direnv/\.config/direnv/direnvrc)$
         additional_dependencies: []
 
   - repo: https://github.com/scop/pre-commit-shfmt
@@ -36,9 +39,19 @@ repos:
     hooks:
       - id: yamllint
         args: [-s]
+        exclude: ^\.github/workflows/
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.4
     hooks:
       - id: gitleaks
         args: ["protect", "--staged", "--redact"]
+
+  # Zsh syntax check for zsh dotfiles
+  - repo: local
+    hooks:
+      - id: zsh-syntax-check
+        name: zsh -n on zsh dotfiles
+        entry: zsh -n zsh/.zshrc zsh/.zshenv zsh/.zprofile
+        language: system
+        pass_filenames: false
