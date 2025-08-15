@@ -27,4 +27,3 @@ set mouse=a
 " Whitespace: highlight trailing spaces
 highlight RedundantSpaces ctermbg=red guibg=red
 match RedundantSpaces /\s\+$/
-

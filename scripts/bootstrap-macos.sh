@@ -34,7 +34,7 @@ if command -v brew >/dev/null 2>&1; then
   BREW_ZSH="$(brew --prefix)/bin/zsh"
   if [ -x "$BREW_ZSH" ]; then
     echo ""
-    echo "To set Homebrew zsh as your default shell, run:" 
+    echo "To set Homebrew zsh as your default shell, run:"
     echo "  BREW_ZSH=\"$BREW_ZSH\""
     echo "  grep -qxF \"$BREW_ZSH\" /etc/shells || echo \"$BREW_ZSH\" | sudo tee -a /etc/shells >/dev/null"
     echo "  chsh -s \"$BREW_ZSH\""
