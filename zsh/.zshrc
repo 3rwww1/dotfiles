@@ -123,16 +123,9 @@ bindkey '^[[Z' reverse-menu-complete
 # Cursor helpers
 alias cext='$HOME/Code/tools/dotfiles/scripts/cursor-extensions.sh export'
 
-# FZF-assisted git cherry-pick: pick recent commit (reverse chrono) and insert hash
-__fzf_cherry_pick() {
-  local sel
-  sel=$(git log --decorate=short --date=short --pretty=format:'%h %ad %s' --since='1 year ago' 2>/dev/null \
-    | fzf --height 60% --reverse --tac --no-sort --ansi --prompt='pick> ' --bind 'enter:accept') || return
-  LBUFFER+=" ${${sel%% *}}"
-}
-zle -N __fzf_cherry_pick
-# Bind Ctrl-G then p (C-g p) to trigger picker while typing: `git cherry-pick` then C-g p
-bindkey '^Gp' __fzf_cherry_pick
+# Git cherry-pick completion: show commits first, keep reverse-chronological order
+zstyle ':completion:*:*:git-cherry-pick:*' tag-order 'commits' 'heads' 'tags' '*'
+zstyle ':completion:*:*:git-cherry-pick:*' sort false
 
 # Terraform completion (uses bash-style completion via bashcompinit)
 if command -v terraform >/dev/null 2>&1; then
