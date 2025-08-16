@@ -16,7 +16,7 @@ This will:
 - Set Homebrew zsh as default shell (prompts for password)
 - Stow all dotfiles into $HOME
 - Link all Homebrew/user completions into `~/.zfunc`
-- Install Cursor extensions from `cursor/extensions.txt`
+- Install Cursor extensions from `cursor/extensions.txt` (managed in-repo; not stowed into `$HOME`)
 
 2) Manual steps (one-time)
 
@@ -33,7 +33,7 @@ This will:
 
 ## Usage
 
-- Export Cursor extensions: `cext` (writes `cursor/extensions.txt`)
+- Export Cursor extensions: `cext` (writes `cursor/extensions.txt`; file remains in repo)
 - Manage Cursor extensions: `scripts/cursor-extensions.sh {export|install|sync}`
 - Refresh completions: `scripts/install-completions.sh`
 
@@ -84,12 +84,12 @@ This will:
   - Secure completion directories: `~/.zfunc`, `~/.zsh/completions`
 - Prompt: Starship
 - History: Atuin (Ctrl-R search; Up Arrow classic)
-- Editor: Cursor settings/keybindings tracked and stowed
+- Editor: Cursor settings/keybindings tracked and stowed (extensions list is repo-local)
 - Terminal: Ghostty font set to JetBrainsMono Nerd Font
 - Env activation: direnv hook enabled
   - Python: activate venv in project if present
   - Ruby/Node: use your version manager (mise/rbenv/nodenv) if configured
-  - Terraform: works with tfenv; terraform completion via `complete -C`
+- Terraform: tfenv installed and defaults to latest (`tfenv install/use latest`); completion via `complete -C`
 
 ## Layout
 - zsh -> ~/.zshrc, ~/.zprofile, ~/.zshenv
@@ -97,5 +97,5 @@ This will:
 - vim -> ~/.vimrc
 - nvim -> ~/.config/nvim/init.vim
 - git -> ~/.gitconfig, ~/.gitignore_global
-- cursor -> ~/Library/Application Support/Cursor/User/{settings.json,keybindings.json}, extensions.txt
+- cursor -> ~/Library/Application Support/Cursor/User/{settings.json,keybindings.json}
 - ghostty -> ~/Library/Application Support/com.mitchellh.ghostty/config

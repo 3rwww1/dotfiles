@@ -7,6 +7,7 @@ cd "$REPO_DIR"
 PACKAGES=(zsh vim nvim git starship editorconfig)
 if [[ "$(uname -s)" == "Darwin" ]]; then
   PACKAGES+=(cursor ghostty)
+  echo "Note: Cursor extensions list is repo-local and not stowed."
 fi
 
 for pkg in "${PACKAGES[@]}"; do

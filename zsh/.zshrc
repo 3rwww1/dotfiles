@@ -5,7 +5,7 @@ if command -v brew >/dev/null 2>&1; then
 fi
 
 # mise initialization
-eval "$(~/.local/bin/mise activate)"
+eval "$(mise activate)"
 
 # Starship (must come before any plugin sourcing)
 eval "$(starship init zsh)"
@@ -121,7 +121,6 @@ bindkey '^[^[[1;3D' backward-word
 bindkey '^[[Z' reverse-menu-complete
 
 # Cursor helpers
-alias cext='$HOME/Code/tools/dotfiles/scripts/cursor-extensions.sh export'
 
 # Git cherry-pick completion: show commits first, keep reverse-chronological order
 zstyle ':completion:*:*:git-cherry-pick:*' tag-order 'commits' 'heads' 'tags' '*'
