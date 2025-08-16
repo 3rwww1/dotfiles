@@ -25,7 +25,7 @@ if command -v apt-get >/dev/null 2>&1; then
   fi
 fi
 
-# Install tfenv (user-scoped) and set latest terraform
+# Install tfenv (user-scoped)
 if ! command -v tfenv >/dev/null 2>&1; then
   echo "Installing tfenv..."
   git clone https://github.com/tfutils/tfenv.git "$HOME/.tfenv" || true
@@ -33,11 +33,6 @@ if ! command -v tfenv >/dev/null 2>&1; then
   ln -sf "$HOME/.tfenv/bin/tfenv" "$HOME/.local/bin/tfenv"
   ln -sf "$HOME/.tfenv/bin/terraform" "$HOME/.local/bin/terraform"
   export PATH="$HOME/.local/bin:$PATH"
-fi
-if command -v tfenv >/dev/null 2>&1; then
-  echo "Ensuring latest Terraform with tfenv..."
-  tfenv install latest || true
-  tfenv use latest || true
 fi
 
 echo "Linux bootstrap complete. Proceeding with common steps in installer..."

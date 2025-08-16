@@ -18,11 +18,4 @@ fi
 echo "Running Brew Bundle..."
 brew bundle --file "$REPO_DIR/brew/Brewfile"
 
-# Initialize tfenv and default to latest terraform
-if command -v tfenv >/dev/null 2>&1; then
-  echo "Ensuring latest Terraform with tfenv..."
-  tfenv install latest || true
-  tfenv use latest || true
-fi
-
 echo "macOS bootstrap complete. Proceeding with common steps in installer..."

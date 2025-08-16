@@ -131,5 +131,14 @@ if command -v terraform >/dev/null 2>&1; then
   complete -o nospace -C "$(command -v terraform)" terraform
 fi
 
+# tfenv completion (bash-style)
+if command -v tfenv >/dev/null 2>&1; then
+  # Provide a minimal completion function for tfenv if not present
+  if ! declare -f _tfenv >/dev/null 2>&1; then
+    _tfenv() { _arguments '*: :->cmds'; }
+  fi
+  compdef _tfenv tfenv
+fi
+
 # Starship prompt should go last ideally (re-affirm placement)
 eval "$(starship init zsh)"

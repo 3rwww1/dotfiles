@@ -38,6 +38,13 @@ if command -v cursor >/dev/null 2>&1; then
   "$REPO_DIR/scripts/cursor-extensions.sh" install || true
 fi
 
+# Ensure tfenv default terraform and enable completion
+if command -v tfenv >/dev/null 2>&1; then
+  echo "Ensuring latest Terraform via tfenv..."
+  tfenv install latest || true
+  tfenv use latest || true
+fi
+
 echo "Install complete."
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) repo=$(cd "$REPO_DIR" && git rev-parse --short HEAD 2>/dev/null || echo unknown)" > "$STAMP_FILE"
 "$REPO_DIR/scripts/self-test.sh" || true
