@@ -64,21 +64,15 @@ else
   note "Cursor CLI not found; skipping Cursor extension check"
 fi
 
-# Optional favorites (warn if missing)
-# Adjust list by OS to avoid noisy warnings (e.g., batcat/fdfind on macOS)
 fav_common=(
   rg fzf zoxide tmux htop jq shellcheck starship atuin \
-  gh kubectl aws gcloud docker podman kind k9s trivy mise \
+  gh kubectl aws gcloud docker podman kind k9s trivy mise bat fd \
   node deno python3 pipx vim nvim direnv terraform ykman go cargo
 )
-fav_macos=( bat fd )
-fav_linux=( bat batcat fd fdfind )
+fav_linux=( batcat fdfind )
 
 fav=( "${fav_common[@]}" )
 case "$OS" in
-  Darwin)
-    fav+=( "${fav_macos[@]}" )
-    ;;
   Linux)
     fav+=( "${fav_linux[@]}" )
     ;;
@@ -91,12 +85,5 @@ for c in "${fav[@]}"; do
   fi
 done
 
-# Print next steps for macOS privileged items
-if [[ "$OS" == "Darwin" ]]; then
-  printf "\nNext (manual, may require sudo):\n"
-  printf "  sudo %s/scripts/post-install-privileged.sh\n" "$REPO_DIR"
-fi
-
 printf "\nSelf-test summary: %d ok, %d warn, %d fail\n" "$pass" "$warn" "$fail"
-# Do not fail the run; provide exit code reflecting failures for CI if desired
 exit 0

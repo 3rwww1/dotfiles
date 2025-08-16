@@ -13,8 +13,6 @@ if ! command -v brew >/dev/null 2>&1; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# Rosetta 2: skipped here to avoid requiring sudo. Run the privileged post-install script if needed.
-
 echo "Running Brew Bundle..."
 brew bundle --file "$REPO_DIR/brew/Brewfile"
 

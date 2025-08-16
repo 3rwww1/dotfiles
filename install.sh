@@ -38,22 +38,12 @@ if command -v cursor >/dev/null 2>&1; then
   "$REPO_DIR/scripts/cursor-extensions.sh" install || true
 fi
 
-# Ensure tfenv default terraform and enable completion
 if command -v tfenv >/dev/null 2>&1; then
   echo "Ensuring latest Terraform via tfenv..."
   tfenv install latest || true
   tfenv use latest || true
 fi
 
-echo "Install complete."
-echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) repo=$(cd "$REPO_DIR" && git rev-parse --short HEAD 2>/dev/null || echo unknown)" > "$STAMP_FILE"
-"$REPO_DIR/scripts/self-test.sh" || true
-
-if [[ "$OS" == "Darwin" ]]; then
-  echo ""
-  echo "To finish privileged steps (Rosetta, default shell, sudo Touch ID), run:"
-  echo "  sudo $REPO_DIR/scripts/post-install-privileged.sh"
-fi
 
 # Enable Corepack for Node package managers and remove global Yarn if present
 if command -v corepack >/dev/null 2>&1; then
@@ -70,4 +60,13 @@ if command -v yarn >/dev/null 2>&1; then
   fi
 fi
 
-exit 0
+"$REPO_DIR/scripts/self-test.sh" || true
+
+echo "Install complete."
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) repo=$(cd "$REPO_DIR" && git rev-parse --short HEAD 2>/dev/null || echo unknown)" > "$STAMP_FILE"
+
+if [[ "$OS" == "Darwin" ]]; then
+  echo ""
+  echo "To finish privileged steps (Rosetta, default shell, sudo Touch ID), run:"
+  echo "  sudo $REPO_DIR/scripts/post-install-privileged.sh"
+fi

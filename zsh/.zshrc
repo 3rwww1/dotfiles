@@ -7,8 +7,7 @@ fi
 # mise initialization
 eval "$(mise activate)"
 
-# Starship (must come before any plugin sourcing)
-eval "$(starship init zsh)"
+"${commands[starship]:-false}" >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # Bash completion system
 autoload -Uz bashcompinit && bashcompinit
@@ -141,4 +140,4 @@ if command -v tfenv >/dev/null 2>&1; then
 fi
 
 # Starship prompt should go last ideally (re-affirm placement)
-eval "$(starship init zsh)"
+"${commands[starship]:-false}" >/dev/null 2>&1 && eval "$(starship init zsh)"
