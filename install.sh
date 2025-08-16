@@ -45,20 +45,13 @@ if command -v tfenv >/dev/null 2>&1; then
 fi
 
 
-# Enable Corepack for Node package managers and remove global Yarn if present
+# Enable Corepack for Node package managers
 if command -v corepack >/dev/null 2>&1; then
   corepack enable || true
 fi
-if command -v yarn >/dev/null 2>&1; then
-  echo "Detected Yarn on PATH. Ensuring Corepack manages yarn..."
-  # Remove only if actually installed by npm/brew; avoid errors when yarn is just a Corepack shim
-  if command -v npm >/dev/null 2>&1 && npm ls -g yarn >/dev/null 2>&1; then
-    npm uninstall -g yarn || true
-  fi
-  if command -v brew >/dev/null 2>&1 && brew list --formula yarn >/dev/null 2>&1; then
-    brew uninstall --ignore-dependencies yarn || true
-  fi
-fi
+
+# Apply environment package policy (present/absent)
+"$REPO_DIR/scripts/apply-packages.sh" || true
 
 "$REPO_DIR/scripts/self-test.sh" || true
 

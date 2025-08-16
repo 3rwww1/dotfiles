@@ -1,0 +1,3 @@
+# Linux packages to remove if present
+# (names are apt package names)
+yarn

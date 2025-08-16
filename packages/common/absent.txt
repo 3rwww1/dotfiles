@@ -1,0 +1,2 @@
+# Common packages that should be absent (will be removed if found)
+yarn
