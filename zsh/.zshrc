@@ -7,8 +7,6 @@ fi
 # mise initialization
 eval "$(mise activate)"
 
-eval "$(starship init zsh)"
-
 # Bash completion system
 autoload -Uz bashcompinit && bashcompinit
 # Zsh completion system: use secure user dirs to avoid compaudit prompts
