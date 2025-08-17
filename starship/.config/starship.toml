@@ -1,4 +1,10 @@
-right_format = """$time"""
+format = """
+$all\
+$custom\
+$line_break\
+$time\
+$character"""
+add_newline = false
 
 [time]
 disabled = false
@@ -9,3 +15,19 @@ style = 'bold yellow'
 truncation_length = 0
 truncate_to_repo = false
 home_symbol = "~"
+
+[gcloud]
+format = '($symbol  [$project]($style) )'
+symbol = 'on ☁️'
+style = 'bold blue'
+
+[aws]
+format = '($symbol  [$profile]($style) )'
+symbol = 'on ☁️'
+style = 'bold orange'
+
+[custom.aws_sso]
+when = "/bin/sh ~/.zsh/bin/aws_sso_status.sh >/dev/null 2>&1"
+command = "/bin/sh ~/.zsh/bin/aws_sso_status.sh"
+format = 'on ☁️  [$output]($style) '
+style = 'bold yellow'

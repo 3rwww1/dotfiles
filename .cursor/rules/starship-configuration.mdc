@@ -1,0 +1,29 @@
+---
+description: Starship prompt configuration standards and fixes
+globs:
+  - "starship/**"
+  - "**/starship.toml"
+alwaysApply: false
+---
+
+# Starship Configuration Standards
+
+## Custom Module Fix
+
+**Critical**: Use `$custom` not `$custom.module-name` in format strings.
+
+`$custom.aws_sso` renders as `$custom` + literal `.aws_sso` text.
+
+```toml
+# ❌ Wrong
+format = "$all\$custom.aws_sso\$line_break\$character"
+
+# ✅ Correct
+format = "$all\$custom\$line_break\$character"
+```
+
+## Standards
+
+- **Cloud modules**: Only show when active, colorize values only
+- **Helpers**: Place in `zsh/.zsh/bin/` for stowing
+- **General**: Use `add_newline = false`, avoid `$fill`
