@@ -276,7 +276,6 @@ apply_linux_packages() {
   local indent="${1}"
   : "${2:?root_dir required}"
   local root_dir="${2}"
-  # Load present/absent directly from manifest
   local manifest
   manifest="${root_dir}/scripts/config/software-list.json"
   local -a present
@@ -285,7 +284,7 @@ apply_linux_packages() {
     log_fail "apt-get not found on Linux" "${indent}"
     exit 1
   fi
-  # Ensure Debian backports before apt-get update (for newer packages like eza)
+  # Ensure Debian backports before apt-get update
   ensure_debian_backports "${indent}"
   # Ensure external APT repositories
   ensure_apt_repository "${indent}" "mise" "${manifest}"
