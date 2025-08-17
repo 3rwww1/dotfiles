@@ -3,43 +3,76 @@
 set -euo pipefail
 
 # Add official Kubernetes apt repo for kubectl
-ensure_kubernetes_apt_repo() {
+ensure_apt_repository() {
   : "${1:?indent required}"
+  : "${2:?repo_name required}"
+  : "${3:?manifest_path required}"
   local indent="${1}"
+  local repo_name="${2}"
+  local manifest="${3}"
+
+  # Only relevant on Debian/Ubuntu with apt
   if ! command -v apt-get >/dev/null 2>&1; then
     return 0
   fi
+
   local sudo_cmd="sudo"
   if [ "$(id -u)" -eq 0 ]; then
     sudo_cmd=""
   fi
-  local keyring="/etc/apt/keyrings/kubernetes-archive-keyring.gpg"
-  local list_file="/etc/apt/sources.list.d/kubernetes.list"
-  if [ ! -f "${keyring}" ] || [ ! -f "${list_file}" ]; then
-    log_info "Adding Kubernetes APT repository (pkgs.k8s.io)" "${indent}"
-    log_cmd "${indent}" "${sudo_cmd} install -d -m 0755 /etc/apt/keyrings" || {
-      log_fail "Failed to ensure /etc/apt/keyrings" "${indent}"
-      exit 1
-    }
-    if ! command -v gpg >/dev/null 2>&1; then
-      log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
-      log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get install -y gnupg ca-certificates curl" || {
-        log_fail "Failed to install gnupg/ca-certificates required for Kubernetes repo" "${indent}"
-        exit 1
-      }
-    fi
-    log_cmd "${indent}" "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor | ${sudo_cmd} tee ${keyring} >/dev/null" || {
-      log_fail "Failed to add Kubernetes GPG key" "${indent}"
-      exit 1
-    }
-    log_cmd "${indent}" "echo 'deb [signed-by=${keyring}] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | ${sudo_cmd} tee ${list_file} >/dev/null" || {
-      log_fail "Failed to add Kubernetes APT source" "${indent}"
-      exit 1
-    }
-    log_cmd "${indent}" "${sudo_cmd} chmod 0644 ${keyring} ${list_file}" || true
-    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
+
+  # Extract repository config from JSON
+  local name keyring_path key_url source_line list_file
+  name=$(jq -r ".apt_repositories.${repo_name}.name // empty" "${manifest}")
+  keyring_path=$(jq -r ".apt_repositories.${repo_name}.keyring_path // empty" "${manifest}")
+  key_url=$(jq -r ".apt_repositories.${repo_name}.key_url // empty" "${manifest}")
+  source_line=$(jq -r ".apt_repositories.${repo_name}.source_line // empty" "${manifest}")
+  list_file=$(jq -r ".apt_repositories.${repo_name}.list_file // empty" "${manifest}")
+
+  if [ -z "${name}" ] || [ -z "${keyring_path}" ] || [ -z "${key_url}" ] || [ -z "${source_line}" ] || [ -z "${list_file}" ]; then
+    log_fail "Invalid APT repository configuration for '${repo_name}'" "${indent}"
+    exit 1
   fi
+
+  # Check if already configured
+  if [ -f "${keyring_path}" ] && [ -f "${list_file}" ]; then
+    return 0
+  fi
+
+  log_info "Adding upstream APT repository for ${name}" "${indent}"
+
+  # Ensure keyrings directory exists
+  log_cmd "${indent}" "${sudo_cmd} install -d -m 0755 /etc/apt/keyrings" || {
+    log_fail "Failed to ensure /etc/apt/keyrings" "${indent}"
+    exit 1
+  }
+
+  # Ensure gpg is available
+  if ! command -v gpg >/dev/null 2>&1; then
+    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
+    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get install -y gnupg ca-certificates wget" || {
+      log_fail "Failed to install gnupg/ca-certificates required for ${name} repo" "${indent}"
+      exit 1
+    }
+  fi
+
+  # Add GPG key
+  log_cmd "${indent}" "wget -qO- ${key_url} | gpg --dearmor | ${sudo_cmd} tee ${keyring_path} >/dev/null" || {
+    log_fail "Failed to add ${name} GPG key" "${indent}"
+    exit 1
+  }
+
+  # Add source list
+  log_cmd "${indent}" "echo '${source_line}' | ${sudo_cmd} tee ${list_file} >/dev/null" || {
+    log_fail "Failed to add ${name} APT source" "${indent}"
+    exit 1
+  }
+
+  # Set permissions
+  log_cmd "${indent}" "${sudo_cmd} chmod 0644 ${keyring_path} ${list_file}" || true
 }
+
+
 
 read_json_list() {
   # Usage: read_json_list <json_file> <jq_query>
@@ -162,7 +195,7 @@ remove_pkg() {
 }
 
 # Remove mise shims from PATH temporarily so package managers don't see them.
-# Usage: remove_mise_shims_from_path <indent>
+# Usage: path_no_shims=$(remove_mise_shims_from_path <indent>)
 remove_mise_shims_from_path() {
   : "${1:?indent required}"
   local indent="${1}"
@@ -174,22 +207,13 @@ remove_mise_shims_from_path() {
       log_info "Temporarily removing mise shims from PATH for package-manager phase" "${indent}"
       local path_no_shims
       path_no_shims="$(printf "%s" ":${PATH}:" | sed "s#:${shims_dir}:#:#g" | sed 's#^:##; s#:$##')"
-      PATH="${path_no_shims}"
+      printf "%s" "${path_no_shims}"
+      return 0
       ;;
     esac
   fi
-}
-
-# Restore PATH from the provided value
-restore_original_path() {
-  : "${1:?indent required}"
-  local indent="${1}"
-  : "${2:?original_path required}"
-  local original_path="${2}"
-  if [ -n "${original_path}" ]; then
-    PATH="${original_path}"
-    log_info "Restored PATH (mise shims visible again)" "${indent}"
-  fi
+  # If no shims to remove, return original PATH
+  printf "%s" "${PATH}"
 }
 
 apply_macos_brew() {
@@ -243,83 +267,9 @@ ensure_debian_backports() {
   fi
 }
 
-# Add upstream APT repo for eza on Debian/Ubuntu (official community repo)
-# See: https://github.com/eza-community/eza/blob/main/INSTALL.md
-ensure_eza_apt_repo() {
-  : "${1:?indent required}"
-  local indent="${1}"
-  # Only relevant on Debian/Ubuntu with apt
-  if ! command -v apt-get >/dev/null 2>&1; then
-    return 0
-  fi
-  local sudo_cmd="sudo"
-  if [ "$(id -u)" -eq 0 ]; then
-    sudo_cmd=""
-  fi
-  # Keyring path and list file
-  local keyring="/etc/apt/keyrings/gierens.gpg"
-  local list_file="/etc/apt/sources.list.d/gierens.list"
-  if [ ! -f "${keyring}" ] || [ ! -f "${list_file}" ]; then
-    log_info "Adding upstream APT repository for eza (deb.gierens.de)" "${indent}"
-    log_cmd "${indent}" "${sudo_cmd} install -d -m 0755 /etc/apt/keyrings" || {
-      log_fail "Failed to ensure /etc/apt/keyrings" "${indent}"
-      exit 1
-    }
-    if ! command -v gpg >/dev/null 2>&1; then
-      log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
-      log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get install -y gnupg ca-certificates wget" || {
-        log_fail "Failed to install gnupg/ca-certificates required for eza repo" "${indent}"
-        exit 1
-      }
-    fi
-    log_cmd "${indent}" "wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor | ${sudo_cmd} tee ${keyring} >/dev/null" || {
-      log_fail "Failed to add eza GPG key" "${indent}"
-      exit 1
-    }
-    log_cmd "${indent}" "echo 'deb [signed-by=${keyring}] http://deb.gierens.de stable main' | ${sudo_cmd} tee ${list_file} >/dev/null" || {
-      log_fail "Failed to add eza APT source" "${indent}"
-      exit 1
-    }
-    log_cmd "${indent}" "${sudo_cmd} chmod 0644 ${keyring} ${list_file}" || true
-    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || {
-      log_fail "apt-get update failed after adding eza repo" "${indent}"
-      exit 1
-    }
-  fi
-}
 
-ensure_mise_apt_repo() {
-  : "${1:?indent required}"
-  local indent="${1}"
-  local sudo_cmd="sudo"
-  if [ "$(id -u)" -eq 0 ]; then
-    sudo_cmd=""
-  fi
-  if [ -f "/etc/apt/sources.list.d/mise.list" ]; then
-    return 0
-  fi
-  log_info "Adding mise upstream APT repository" "${indent}"
-  log_cmd "${indent}" "${sudo_cmd} install -d -m 0755 /etc/apt/keyrings" || {
-    log_fail "Failed to ensure /etc/apt/keyrings" "${indent}"
-    exit 1
-  }
-  if ! command -v gpg >/dev/null 2>&1; then
-    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
-    log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get install -y gnupg ca-certificates" || {
-      log_fail "Failed to install gnupg/ca-certificates required for mise repo" "${indent}"
-      exit 1
-    }
-  fi
-  log_cmd "${indent}" "curl -fsSL https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | ${sudo_cmd} tee /etc/apt/keyrings/mise-archive-keyring.gpg >/dev/null" || {
-    log_fail "Failed to add mise GPG key" "${indent}"
-    exit 1
-  }
-  log_cmd "${indent}" "echo 'deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg] https://mise.jdx.dev/deb stable main' | ${sudo_cmd} tee /etc/apt/sources.list.d/mise.list >/dev/null" || {
-    log_fail "Failed to add mise APT source" "${indent}"
-    exit 1
-  }
-  log_cmd "${indent}" "DEBIAN_FRONTEND=noninteractive ${sudo_cmd} apt-get update" || true
-}
+
+
 
 apply_linux_packages() {
   : "${1:?indent required}"
@@ -337,7 +287,11 @@ apply_linux_packages() {
   fi
   # Ensure Debian backports before apt-get update (for newer packages like eza)
   ensure_debian_backports "${indent}"
-  # Single apt-get update for the Linux phase
+  # Ensure external APT repositories
+  ensure_apt_repository "${indent}" "mise" "${manifest}"
+  ensure_apt_repository "${indent}" "eza" "${manifest}"
+  ensure_apt_repository "${indent}" "kubernetes" "${manifest}"
+
   local uid sudo_cmd
   uid="$(id -u)"
   sudo_cmd="sudo"
@@ -348,13 +302,6 @@ apply_linux_packages() {
     log_fail "apt-get update failed" "${indent}"
     exit 1
   }
-
-  # Ensure mise's APT repo is configured first
-  ensure_mise_apt_repo "${indent}"
-  # Ensure eza upstream apt repo (for stable Debian releases)
-  ensure_eza_apt_repo "${indent}"
-  # Ensure Kubernetes apt repo for kubectl
-  ensure_kubernetes_apt_repo "${indent}"
 
   # Apply
   local pkg
@@ -380,10 +327,7 @@ install_mise_tools() {
   if [ "${#mise_tools[@]}" -eq 0 ]; then
     return 0
   fi
-  if ! command -v mise >/dev/null 2>&1; then
-    log_fail "mise is required for installing managed tools but was not found" "${indent}"
-    exit 1
-  fi
+
   log_info "Installing mise-managed tools" "${indent}"
   indent=$((indent + 1))
   local t
@@ -414,90 +358,38 @@ install_mise_tools() {
 setup_corepack_and_yarn() {
   : "${1:?indent required}"
   local indent="${1}"
-  if command -v corepack >/dev/null 2>&1; then
-    local corepack_ok=1
-    log_info "Enabling corepack" "${indent}"
-    if ! log_cmd "${indent}" corepack enable; then
-      log_warn "corepack enable failed; will fall back to npm for yarn" "${indent}"
-      corepack_ok=0
-    fi
-    if [ "${corepack_ok}" -eq 1 ]; then
-      indent=$((indent + 1))
-      if command -v yarn >/dev/null 2>&1; then
-        log_info "yarn is already installed" "${indent}"
-      else
-        log_info "Installing yarn via corepack (stable)" "${indent}"
-        if ! log_cmd "${indent}" corepack prepare yarn@stable --activate; then
-          log_warn "Failed to install yarn via corepack; will fall back to npm" "${indent}"
-          corepack_ok=0
-        fi
-      fi
-      indent=$((indent - 1))
-      if [ "${corepack_ok}" -eq 1 ]; then
-        return 0
-      fi
-    fi
-  fi
-
-  # Fallback: install yarn via npm (Node provided by mise), then reshim
-  if command -v npm >/dev/null 2>&1; then
-    log_info "corepack not found; installing yarn via npm -g" "${indent}"
-    log_cmd "${indent}" npm install -g yarn || {
-      log_warn "Failed to install yarn via npm; skipping yarn setup" "${indent}"
-      return 0
+  log_info "Enabling corepack" "${indent}"
+  log_cmd "${indent}" corepack enable || {
+    log_fail "corepack enable failed" "${indent}"
+    exit 1
+  }
+  if command -v yarn >/dev/null 2>&1; then
+    log_info "yarn is already installed (corepack)" "${indent}"
+  else
+    log_info "Installing yarn via corepack (stable)" "${indent}"
+    log_cmd "${indent}" corepack prepare yarn@stable --activate || {
+      log_fail "Failed to install yarn via corepack" "${indent}"
+      exit 1
     }
-    if command -v mise >/dev/null 2>&1; then
-      log_info "Reshimming after npm global install" "${indent}"
-      log_cmd "${indent}" mise reshim || true
-    fi
-    if command -v yarn >/dev/null 2>&1; then
-      log_info "yarn installed via npm" "${indent}"
-      return 0
-    fi
   fi
-
-  log_warn "Skipping yarn setup (corepack and npm fallback unavailable)" "${indent}"
-  return 0
 }
 
 install_ruby_gems() {
   : "${1:?indent required}"
   local indent="${1}"
+
   log_info "Installing Ruby gems" "${indent}"
   indent=$((indent + 1))
   if command -v rubocop >/dev/null 2>&1; then
     log_info "rubocop is already installed" "${indent}"
   else
-    if command -v mise >/dev/null 2>&1; then
-      local ruby_root ruby_bin
-      ruby_root="$(mise where ruby 2>/dev/null || true)"
-      if [ -z "${ruby_root}" ]; then
-        log_warn "mise Ruby not found; skipping rubocop install" "${indent}"
-        indent=$((indent - 1))
-        return 0
-      fi
-      ruby_bin="${ruby_root}/bin/ruby"
-      local gem_bin
-      gem_bin="${ruby_root}/bin/gem"
-      if [ ! -x "${gem_bin}" ]; then
-        log_warn "gem executable not found at ${gem_bin}; skipping rubocop install" "${indent}"
-        indent=$((indent - 1))
-        return 0
-      fi
-      log_info "Installing rubocop via ${gem_bin}" "${indent}"
-      if ! log_cmd "${indent}" "${gem_bin}" install --no-document --user-install --bindir "${HOME}/.local/bin" rubocop; then
-        log_warn "Failed to install rubocop via gem; continuing without rubocop" "${indent}"
-      fi
-    else
-      log_warn "mise not found; skipping rubocop install" "${indent}"
-      indent=$((indent - 1))
-      return 0
-    fi
+    log_info "Installing rubocop via gem" "${indent}"
+    log_cmd "${indent}" gem install --no-document --user-install --bindir "${HOME}/.local/bin" rubocop || {
+      log_fail "Failed to install rubocop via gem" "${indent}"
+      exit 1
+    }
   fi
-  indent=$((indent - 1))
 }
-
-## install_jq removed; use install_pkg
 
 package_sync() {
   : "${1:?indent required}"
@@ -519,20 +411,11 @@ package_sync() {
   # do not see mise-provided binaries
   local original_path
   original_path="${PATH}"
-  remove_mise_shims_from_path "${indent}"
 
-  case "${os_name}" in
-  Darwin)
-    apply_macos_brew "${indent}" "${repo_dir}"
-    ;;
-  Linux)
-    apply_linux_packages "${indent}" "${repo_dir}"
-    ;;
-  *)
-    log_fail "Unsupported OS: ${os_name}" "${indent}"
-    exit 1
-    ;;
-  esac
+  local path_no_shims
+  path_no_shims=$(remove_mise_shims_from_path "${indent}")
+  export PATH="${path_no_shims}"
+
   log_info "Removing absent packages" "${indent}"
   local -a absent
   absent=()
@@ -548,7 +431,20 @@ package_sync() {
   done
   indent=$((indent - 1))
 
-  restore_original_path "${indent}" "${original_path}"
+  export PATH="${original_path}"
+
+  case "${os_name}" in
+  Darwin)
+    apply_macos_brew "${indent}" "${repo_dir}"
+    ;;
+  Linux)
+    apply_linux_packages "${indent}" "${repo_dir}"
+    ;;
+  *)
+    log_fail "Unsupported OS: ${os_name}" "${indent}"
+    exit 1
+    ;;
+  esac
 
   install_mise_tools "${indent}" "${repo_dir}"
   setup_corepack_and_yarn "${indent}"

@@ -94,7 +94,7 @@ log_cmd() {
   local reset=""
   local status
 
-  out=$(bash -lc "${cmd}" 2>&1)
+  out=$(bash -c "export PATH=\"${PATH}\"; ${cmd}" 2>&1)
   status=$?
   # add 1 to indent for the command output
   indent=$((indent + 1))

@@ -24,6 +24,9 @@ RUN if ! id -u $USERNAME >/dev/null 2>&1; then \
 USER $USERNAME
 WORKDIR /workspaces
 
+# Add mise shims to PATH for subsequent commands
+ENV PATH=/home/$USERNAME/.local/share/mise/shims:$PATH
+
 # Copy repo and run installer (Linux path)
 COPY --chown=$USERNAME:$USERNAME . /workspaces/dotfiles
 WORKDIR /workspaces/dotfiles
