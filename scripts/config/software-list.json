@@ -5,21 +5,17 @@
       "present": [
         "awscli",
         "bat",
-        "deno",
         "direnv",
         "eza",
         "fzf",
         "gh",
         "git",
-        "go",
         "htop",
         "jq",
         "kubectl",
         "mise",
         "neovim",
-        "node",
         "pre-commit",
-        "python",
         "ripgrep",
         "shellcheck",
         "shfmt",
@@ -49,7 +45,20 @@
     "linux": {
       "present": [
         "fd-find",
-        "python3-pip"
+        "build-essential",
+        "autoconf",
+        "bison",
+        "pkg-config",
+        "libssl-dev",
+        "zlib1g-dev",
+        "libreadline-dev",
+        "libffi-dev",
+        "libyaml-dev",
+        "libsqlite3-dev",
+        "libbz2-dev",
+        "liblzma-dev",
+        "libncurses-dev",
+        "tk-dev"
       ]
     },
     "macos": {

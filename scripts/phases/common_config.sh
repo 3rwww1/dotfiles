@@ -12,11 +12,34 @@ stow_dotfiles() {
 	then
 		packages+=(cursor ghostty)
 	fi
+
+	# Backup helper for conflicting dotfiles before stowing
+	backup_conflict() {
+		: "${1:?target path required}"; local target="$1"
+		local backup_root backup_dir base
+		backup_root="$HOME/.config/dotfiles/backups"
+		base="$(basename "$target")"
+		backup_dir="$backup_root/stow-$(date +%Y%m%d%H%M%S)"
+		mkdir -p "$backup_dir"
+		if [ -e "$target" ] && [ ! -L "$target" ]
+		then
+			mv "$target" "$backup_dir/$base"
+			log_info "Backed up $target to $backup_dir/$base" "$indent"
+		fi
+	}
+
 	local pkg
 	for pkg in "${packages[@]}"
 	do
 		if [ -d "$repo_dir/$pkg" ]
 		then
+			# Proactively back up common conflicts per package
+			if [ "$pkg" = "zsh" ]
+			then
+				backup_conflict "$HOME/.zshrc"
+				backup_conflict "$HOME/.zprofile"
+				backup_conflict "$HOME/.zshenv"
+			fi
 			if log_cmd "$indent" stow -v -t "$HOME" -d "$repo_dir" "$pkg"
 			then
 				log_pass "stowed $pkg" "$indent"
