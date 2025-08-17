@@ -8,6 +8,8 @@ export PATH="${HOME}/.local/bin:${PATH}"
 export PATH="${HOME}/.local/share/mise/shims:${PATH}"
 # shellcheck source=scripts/helpers/log.sh
 source "$REPO_DIR/scripts/helpers/log.sh"
+# shellcheck source=scripts/helpers/mapfile.sh
+source "$REPO_DIR/scripts/helpers/mapfile.sh"
 # shellcheck source=scripts/phases/environment_detection.sh
 source "$REPO_DIR/scripts/phases/environment_detection.sh"
 # shellcheck source=scripts/phases/bootstrap.sh
@@ -48,7 +50,7 @@ main() {
 
   phase_idx=$((phase_idx + 1))
   log_phase "[${phase_idx}/${phase_total}] Package sync"
-  package_sync "$indent" "$REPO_DIR"
+  package_sync "$indent" "$REPO_DIR" "$os_name"
 
   phase_idx=$((phase_idx + 1))
   log_phase "[${phase_idx}/${phase_total}] Common config"

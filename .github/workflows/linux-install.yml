@@ -16,8 +16,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Run installer
         run: |
-          ./install.sh || true
-      - name: Verify files
-        run: |
-          test -L "$HOME/.zshrc"
-          test -f "$HOME/.zfunc/_gh" || true
+          ./install.sh

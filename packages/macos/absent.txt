@@ -1,2 +1,0 @@
-# macOS packages to remove if present (brew)
-yarn

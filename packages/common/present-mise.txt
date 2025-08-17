@@ -1,9 +1,0 @@
-# Tools managed by mise (global)
-# One per line; comments and blanks allowed
-terraform
-node
-ruby
-deno
-python
-go
-rust

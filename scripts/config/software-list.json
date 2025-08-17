@@ -1,0 +1,68 @@
+
+{
+  "packages": {
+    "common": {
+      "present": [
+        "awscli",
+        "bat",
+        "deno",
+        "direnv",
+        "eza",
+        "fzf",
+        "gh",
+        "git",
+        "go",
+        "htop",
+        "jq",
+        "kubectl",
+        "mise",
+        "neovim",
+        "node",
+        "pre-commit",
+        "python",
+        "ripgrep",
+        "shellcheck",
+        "shfmt",
+        "stow",
+        "tmux",
+        "unzip",
+        "vim",
+        "zoxide",
+        "zsh"
+      ],
+      "absent": [
+        "yarn",
+        "go",
+        "rust",
+        "terraform"
+      ],
+      "mise": [
+        "deno",
+        "go",
+        "node",
+        "python",
+        "ruby",
+        "rust",
+        "terraform"
+      ]
+    },
+    "linux": {
+      "present": [
+        "fd-find",
+        "python3-pip"
+      ]
+    },
+    "macos": {
+      "present": [
+        "actionlint",
+        "atuin",
+        "direnv",
+        "fd",
+        "neovim",
+        "starship",
+        "vale",
+        "vim"
+      ]
+    }
+  }
+}
