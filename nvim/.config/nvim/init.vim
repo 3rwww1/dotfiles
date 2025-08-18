@@ -24,5 +24,20 @@ require('lazy').setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = { options = { theme = 'auto', icons_enabled = true } },
   },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    config = function()
+      vim.cmd.colorscheme("catppuccin-mocha")
+    end,
+  },
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup()
+    end,
+  },
 })
 EOF
+
+highlight Normal ctermbg=NONE guibg=NONE

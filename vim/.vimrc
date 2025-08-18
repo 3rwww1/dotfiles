@@ -5,6 +5,8 @@ filetype plugin indent on
 
 " UI
 set number
+set ambiwidth=double
+set display+=uhex
 
 " Indentation (2 spaces by default; adjust per language as needed)
 set tabstop=2
