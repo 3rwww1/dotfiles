@@ -39,5 +39,6 @@
     "redhat.telemetry.enabled": false,
     "shellcheck.customArgs": [
       "--external-sources"
-    ]
+    ],
+    "cursor.cpp.enablePartialAccepts": true
 }
