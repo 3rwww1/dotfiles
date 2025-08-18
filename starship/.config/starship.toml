@@ -20,9 +20,3 @@ home_symbol = "~"
 format = '($symbol  [$project]($style) )'
 symbol = 'on ☁️'
 style = 'bold blue'
-
-[custom.aws_sso]
-when = "/bin/sh ~/.zsh/bin/aws_sso_status.sh >/dev/null 2>&1"
-command = "/bin/sh ~/.zsh/bin/aws_sso_status.sh"
-format = 'on ☁️ [$output]($style) '
-style = 'bold yellow'
