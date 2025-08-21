@@ -17,6 +17,6 @@ truncate_to_repo = false
 home_symbol = "~"
 
 [gcloud]
-format = '($symbol  [$project]($style) )'
+format = '($symbol [$project]($style) )'
 symbol = 'on ☁️'
 style = 'bold blue'

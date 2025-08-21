@@ -7,7 +7,7 @@ stow_dotfiles() {
 	: "${2:?repo_dir required}"; local repo_dir="$2"
 	: "${3:?os_name required}"; local os_name="$3"
 	local -a packages
-	packages=(zsh vim nvim git starship editorconfig)
+	packages=(zsh vim nvim git starship editorconfig hl)
 	if [ "$os_name" = "Darwin" ]
 	then
 		packages+=(cursor ghostty)

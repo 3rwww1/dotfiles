@@ -1,0 +1,22 @@
+---
+time-format: "%Y-%m-%dT%H:%M:%S%z"
+time-zone: "Local"
+
+fields:
+  predefined:
+    time:
+      show: always
+    level:
+      show: always
+    app:
+      show: always
+    message:
+      show: always
+
+formatting:
+  message:
+    format: "delimited"
+  punctuation:
+    message-delimiter: " "
+    level-left-separator: ""
+    level-right-separator: ":"

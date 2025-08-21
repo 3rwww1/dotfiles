@@ -103,6 +103,9 @@ alias ...='cd ../..'
 alias c='clear'
 alias vim='nvim'
 
+# Mise
+alias mr="mise run"
+
 # Option/Alt + Arrow keys jump by word (macOS)
 # Works in Terminal.app and iTerm2 when terminal sends ESC+f/b
 bindkey '^[f' forward-word
