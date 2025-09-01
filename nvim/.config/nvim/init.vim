@@ -25,18 +25,18 @@ require('lazy').setup({
     opts = { options = { theme = 'auto', icons_enabled = true } },
   },
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    config = function()
-      vim.cmd.colorscheme("catppuccin-mocha")
-    end,
-  },
-  {
     "numToStr/Comment.nvim",
     config = function()
       require("Comment").setup()
     end,
   },
+  {
+    "filipjanevski/0x96f.nvim",
+    config = function()
+      require("0x96f").setup()
+      vim.cmd.colorscheme("0x96f")
+    end,
+  }
 })
 EOF
 
