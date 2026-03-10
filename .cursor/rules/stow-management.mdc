@@ -4,6 +4,10 @@ globs:
   - "scripts/stow-all.sh"
   - "cursor/**"
   - "ghostty/**"
+paths:
+  - "scripts/stow-all.sh"
+  - "cursor/**"
+  - "ghostty/**"
 alwaysApply: false
 ---
 

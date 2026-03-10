@@ -1,3 +1,43 @@
+# Keep only User/settings.json and User/keybindings.json
+# Ignore everything else in Cursor's app support directory
+
 Library/Application Support/Cursor/User/globalStorage/
 Library/Application Support/Cursor/User/History/
 Library/Application Support/Cursor/User/workspaceStorage/
+
+# Caches
+Library/Application Support/Cursor/Cache/
+Library/Application Support/Cursor/CachedData/
+Library/Application Support/Cursor/CachedProfilesData/
+Library/Application Support/Cursor/Code Cache/
+Library/Application Support/Cursor/DawnGraphiteCache/
+Library/Application Support/Cursor/DawnWebGPUCache/
+Library/Application Support/Cursor/GPUCache/
+
+# Storage
+Library/Application Support/Cursor/Local Storage/
+Library/Application Support/Cursor/Service Worker/
+Library/Application Support/Cursor/Session Storage/
+Library/Application Support/Cursor/Shared Dictionary/
+Library/Application Support/Cursor/SharedStorage
+Library/Application Support/Cursor/SharedStorage-wal
+Library/Application Support/Cursor/WebStorage/
+
+# Sensitive/machine-specific
+Library/Application Support/Cursor/Cookies
+Library/Application Support/Cursor/Cookies-journal
+Library/Application Support/Cursor/Trust Tokens
+Library/Application Support/Cursor/Trust Tokens-journal
+Library/Application Support/Cursor/Network Persistent State
+Library/Application Support/Cursor/Preferences
+Library/Application Support/Cursor/DIPS
+Library/Application Support/Cursor/DIPS-wal
+Library/Application Support/Cursor/machineid
+Library/Application Support/Cursor/code.lock
+Library/Application Support/Cursor/languagepacks.json
+
+# Logs and crash reports
+Library/Application Support/Cursor/Crashpad/
+Library/Application Support/Cursor/logs/
+Library/Application Support/Cursor/process-monitor/
+Library/Application Support/Cursor/sentry/

@@ -5,6 +5,11 @@ globs:
   - ".envrc"
   - "templates/mise/**"
   - "templates/direnv/**"
+paths:
+  - ".tool-versions"
+  - ".envrc"
+  - "templates/mise/**"
+  - "templates/direnv/**"
 alwaysApply: false
 ---
 

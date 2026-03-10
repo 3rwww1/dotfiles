@@ -4,6 +4,10 @@ globs:
   - "scripts/**/*.sh"
   - "**/*.sh"
   - "install.sh"
+paths:
+  - "scripts/**/*.sh"
+  - "**/*.sh"
+  - "install.sh"
 alwaysApply: false
 ---
 

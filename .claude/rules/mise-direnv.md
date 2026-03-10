@@ -1,0 +1,1 @@
+../../.cursor/rules/mise-direnv.mdc

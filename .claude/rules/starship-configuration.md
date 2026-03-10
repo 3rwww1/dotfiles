@@ -1,0 +1,1 @@
+../../.cursor/rules/starship-configuration.mdc

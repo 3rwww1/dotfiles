@@ -1,0 +1,1 @@
+../../.cursor/rules/shell-scripting.mdc

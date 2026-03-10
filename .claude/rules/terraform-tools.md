@@ -1,0 +1,1 @@
+../../.cursor/rules/terraform-tools.mdc

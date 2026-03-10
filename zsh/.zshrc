@@ -1,7 +1,9 @@
 ### Runtime managers first
 eval "$(direnv hook zsh)"
-eval "$(mise activate zsh --shims)"
+eval "$(mise activate zsh)"
 eval "$(mise direnv activate)"
+
+corepack enable > /dev/null 2>&1
 
 # Bash completion system
 autoload -Uz bashcompinit && bashcompinit

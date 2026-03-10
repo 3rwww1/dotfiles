@@ -3,6 +3,9 @@ description: Git workflow and pre-commit hook standards
 globs:
   - ".pre-commit-config.yaml"
   - ".gitleaks.toml"
+paths:
+  - ".pre-commit-config.yaml"
+  - ".gitleaks.toml"
 alwaysApply: false
 ---
 

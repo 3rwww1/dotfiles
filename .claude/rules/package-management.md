@@ -1,0 +1,1 @@
+../../.cursor/rules/package-management.mdc

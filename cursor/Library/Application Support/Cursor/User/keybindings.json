@@ -4,7 +4,8 @@
     "command": "composerMode.agent"
   },
   {
-    "key": "cmd+e",
-    "command": "composerMode.background"
+    "key": "ctrl+shift+cmd+c",
+    "command": "aichat.close-sidebar",
+    "when": "auxiliaryBarVisible && !isAuxiliaryWindowFocusedContext"
   }
 ]

@@ -357,6 +357,24 @@ install_mise_tools() {
 setup_corepack_and_yarn() {
   : "${1:?indent required}"
   local indent="${1}"
+
+  # corepack is bundled with Node 16.10+; ensure node is available first
+  if ! command -v node >/dev/null 2>&1; then
+    log_info "Node not found, installing via mise before corepack setup" "${indent}"
+    log_cmd "${indent}" mise install node || {
+      log_fail "Failed to install node via mise" "${indent}"
+      exit 1
+    }
+    log_cmd "${indent}" mise use -g node || {
+      log_fail "Failed to set node as global via mise" "${indent}"
+      exit 1
+    }
+    log_cmd "${indent}" mise reshim || {
+      log_fail "Failed to reshim after node install" "${indent}"
+      exit 1
+    }
+  fi
+
   log_info "Enabling corepack" "${indent}"
   log_cmd "${indent}" corepack enable || {
     log_fail "corepack enable failed" "${indent}"

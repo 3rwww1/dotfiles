@@ -1,0 +1,1 @@
+../../.cursor/rules/coding-standards.mdc

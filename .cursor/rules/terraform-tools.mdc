@@ -3,6 +3,9 @@ description: Terraform and infrastructure tool standards
 globs:
   - "**/*.tf"
   - "**/.tool-versions"
+paths:
+  - "**/*.tf"
+  - "**/.tool-versions"
 alwaysApply: false
 ---
 

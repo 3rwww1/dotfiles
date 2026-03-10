@@ -4,6 +4,10 @@ globs:
   - "packages/**"
   - "brew/**"
   - "scripts/apply-packages.sh"
+paths:
+  - "packages/**"
+  - "brew/**"
+  - "scripts/apply-packages.sh"
 alwaysApply: false
 ---
 

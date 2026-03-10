@@ -3,6 +3,9 @@ description: Zsh configuration standards and completion management
 globs:
   - "zsh/**"
   - "scripts/install-completions.sh"
+paths:
+  - "zsh/**"
+  - "scripts/install-completions.sh"
 alwaysApply: false
 ---
 

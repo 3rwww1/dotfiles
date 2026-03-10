@@ -3,6 +3,9 @@ description: Starship prompt configuration standards and fixes
 globs:
   - "starship/**"
   - "**/starship.toml"
+paths:
+  - "starship/**"
+  - "**/starship.toml"
 alwaysApply: false
 ---
 

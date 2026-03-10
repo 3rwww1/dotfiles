@@ -19,15 +19,19 @@
     "**/.trunk/*plugins/": true
   },
   "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
   "editor.tabSize": 2,
-  "editor.renderWhitespace": "all",
-  "editor.cursorStyle": "block",
+  "editor.renderWhitespace": "trailing",
+
+  "workbench.colorCustomizations": {
+    "editorWhitespace.trailingForeground": "#ff0000"
+  },
   "window.autoDetectColorScheme": true,
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "git.autofetch": true,
-  "workbench.preferredDarkColorTheme": "Default Dark Modern",
   "diffEditor.hideUnchangedRegions.enabled": true,
   "workbench.preferredHighContrastColorTheme": "Default Dark Modern",
   "workbench.preferredHighContrastLightColorTheme": "Default Light Modern",
@@ -35,12 +39,10 @@
   "window.systemColorTheme": "dark",
   "jupyter.themeMatplotlibPlots": true,
   "markdown-preview-enhanced.mermaidTheme": "dark",
-  "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+  "markdown-preview-enhanced.codeBlockTheme": "atom-dark.css",
   "cursor.composer.shouldChimeAfterChatFinishes": true,
   "redhat.telemetry.enabled": false,
-  "shellcheck.customArgs": [
-    "--external-sources"
-  ],
+  "shellcheck.customArgs": ["--external-sources"],
   "cursor.cpp.enablePartialAccepts": true,
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -51,5 +53,29 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-  }
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.preferredDarkColorTheme": "0x96f",
+  "cursor.diffs.useCharacterLevelDiffs": true,
+  "cursor.terminal.usePreviewBox": true,
+  "markdown-preview-enhanced.previewTheme": "atom-dark.css",
+  "markdown-preview-enhanced.revealjsTheme": "solarized.css",
+  "markdown-preview-enhanced.previewColorScheme": "editorColorScheme",
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "datadog.connection.oauth.setup.domain": "app.datadoghq.eu",
+  "aws.cloudformation.telemetry.enabled": true,
+  "terminal.integrated.defaultProfile.osx": "zsh (2)",
+  "terminal.integrated.scrollback": 10000,
+  "cursor.composer.shouldAutoAcceptDiffs": false,
+  "workbench.editor.enablePreview": false
 }

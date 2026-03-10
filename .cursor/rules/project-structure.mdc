@@ -3,6 +3,9 @@ description: Project structure and phase organization for dotfiles installation
 globs:
   - "install.sh"
   - "scripts/phases/**"
+paths:
+  - "install.sh"
+  - "scripts/phases/**"
 alwaysApply: false
 ---
 
