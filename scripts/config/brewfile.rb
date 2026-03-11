@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 tap 'aquasecurity/trivy'
+tap 'timescale/tap'
 
 brew 'actionlint'
 brew 'atuin'
@@ -46,6 +47,7 @@ brew 'sqlcipher'
 brew 'starship'
 brew 'stow'
 brew 'temporal'
+brew 'timescale/tap/timescaledb-tools'
 brew 'terminal-notifier'
 brew 'terraform-docs'
 brew 'tflint'
@@ -78,4 +80,5 @@ cask 'podman-desktop'
 cask 'rectangle'
 cask 'session-manager-plugin'
 cask 'slack-cli'
+cask 'snowflake-snowsql'
 cask 'yubico-authenticator'
