@@ -11,7 +11,9 @@
       "Bash(git commit:*)",
       "Bash(gh auth status:*)",
       "Bash(git config:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(git add:*)",
+      "Bash(git push)"
     ]
   }
 }
