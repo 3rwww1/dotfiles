@@ -7,7 +7,7 @@ stow_dotfiles() {
 	: "${2:?repo_dir required}"; local repo_dir="$2"
 	: "${3:?os_name required}"; local os_name="$3"
 	local -a packages
-	packages=(zsh vim nvim git starship editorconfig hl)
+	packages=(zsh vim nvim git starship editorconfig hl claude)
 	if [ "$os_name" = "Darwin" ]
 	then
 		packages+=(cursor ghostty)
@@ -39,6 +39,10 @@ stow_dotfiles() {
 				backup_conflict "$HOME/.zshrc"
 				backup_conflict "$HOME/.zprofile"
 				backup_conflict "$HOME/.zshenv"
+			fi
+			if [ "$pkg" = "claude" ]
+			then
+				backup_conflict "$HOME/.claude/settings.json"
 			fi
 			if log_cmd "$indent" stow -v -t "$HOME" -d "$repo_dir" "$pkg"
 			then
