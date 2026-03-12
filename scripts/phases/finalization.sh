@@ -16,13 +16,20 @@ finalization() {
 	case "${os_name}" in
 		Darwin)
 			now_local="$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "${now_iso}" "+%Y-%m-%d %H:%M:%S %Z" 2>/dev/null || printf "%s" "${now_iso}")"
-			log_info "Run this script as sudo to finish install:" "${indent}"
-			indent_next=$((indent + 2))
-			log_info "$(text_bold "sudo ${repo_dir}/scripts/post-install-privileged.sh")" "${indent_next}"
 			;;
 		*)
 			now_local="$(date -d "${now_iso}" "+%Y-%m-%d %H:%M:%S %Z" 2>/dev/null || printf "%s" "${now_iso}")"
 			;;
 	esac
 	log_pass "Install complete at $(text_bold "${now_local}")" "${indent}"
+
+	local indent_next=$((indent + 2))
+	case "${os_name}" in
+		Darwin)
+			log_info "Run this script as sudo to finish install:" "${indent}"
+			log_info "$(text_bold "sudo ${repo_dir}/scripts/post-install-privileged.sh")" "${indent_next}"
+			;;
+	esac
+	log_info "Configure aws-sso-cli with your SSO details:" "${indent}"
+	log_info "$(text_bold "cp ~/.config/aws-sso/config.sample.yaml ~/.config/aws-sso/config.yaml && vim ~/.config/aws-sso/config.yaml")" "${indent_next}"
 }

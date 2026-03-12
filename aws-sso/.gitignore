@@ -1,0 +1,4 @@
+# Only track config.sample.yaml
+.config/aws-sso/config.yaml
+.config/aws-sso/cache.json
+.config/aws-sso/storage.lock

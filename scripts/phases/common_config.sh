@@ -7,7 +7,7 @@ stow_dotfiles() {
 	: "${2:?repo_dir required}"; local repo_dir="$2"
 	: "${3:?os_name required}"; local os_name="$3"
 	local -a packages
-	packages=(zsh vim nvim git starship editorconfig hl claude)
+	packages=(zsh vim nvim git starship editorconfig hl claude aws-sso)
 	if [ "$os_name" = "Darwin" ]
 	then
 		packages+=(cursor ghostty)
@@ -78,6 +78,10 @@ stow_dotfiles() {
 				# Ensure ~/.claude is a real directory so stow never folds it
 				mkdir -p "$HOME/.claude"
 				backup_conflict "$HOME/.claude/settings.json"
+			fi
+			if [ "$pkg" = "aws-sso" ]
+			then
+				mkdir -p "$HOME/.config/aws-sso"
 			fi
 			if log_cmd "$indent" stow -v -t "$HOME" -d "$repo_dir" "$pkg"
 			then
