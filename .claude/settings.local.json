@@ -1,19 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ln:*)",
-      "Bash(brew leaves:*)",
-      "Bash(brew list:*)",
-      "Bash(brew uses:*)",
-      "Bash(brew deps:*)",
-      "Bash(brew info:*)",
-      "WebFetch(domain:github.com)",
-      "Bash(git commit:*)",
-      "Bash(gh auth status:*)",
-      "Bash(git config:*)",
-      "Bash(gh auth:*)",
-      "Bash(git add:*)",
-      "Bash(git push)"
+      "Bash(bash install.sh:*)",
+      "Bash(*)"
     ]
   }
 }

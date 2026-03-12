@@ -28,11 +28,44 @@ stow_dotfiles() {
 		fi
 	}
 
+	# If the repo was moved, existing stow symlinks point to the old location.
+	# Detect that old stow dir from a sampled symlink and unstow from it first.
+	unstow_from_old_dir() {
+		: "${1:?pkg required}"; local pkg="$1"
+		local pkg_dir="$repo_dir/$pkg"
+		[ -d "$pkg_dir" ] || return 0
+		local old_stow_dir=""
+		local f rel dest target candidate
+		while IFS= read -r f
+		do
+			rel="${f#"$pkg_dir/"}"
+			dest="$HOME/$rel"
+			[ -L "$dest" ] || continue
+			target="$(readlink "$dest")"
+			case "$target" in
+				/*) ;;
+				*)  target="$(cd "$(dirname "$dest")" && pwd)/$target" ;;
+			esac
+			case "$target" in
+				"$repo_dir"/*) continue ;;
+			esac
+			# target should be <old_stow_dir>/<pkg>/<rel> — strip suffix to get old dir
+			candidate="${target%"/$pkg/$rel"}"
+			[ -d "$candidate" ] && old_stow_dir="$candidate" && break
+		done < <(find "$pkg_dir" -mindepth 1)
+		if [ -n "$old_stow_dir" ]
+		then
+			stow -d "$old_stow_dir" -t "$HOME" --delete "$pkg" 2>/dev/null || true
+		fi
+	}
+
 	local pkg
 	for pkg in "${packages[@]}"
 	do
 		if [ -d "$repo_dir/$pkg" ]
 		then
+			# Unstow from old repo location if the repo has been moved
+			unstow_from_old_dir "$pkg"
 			# Proactively back up common conflicts per package
 			if [ "$pkg" = "zsh" ]
 			then
@@ -42,6 +75,8 @@ stow_dotfiles() {
 			fi
 			if [ "$pkg" = "claude" ]
 			then
+				# Ensure ~/.claude is a real directory so stow never folds it
+				mkdir -p "$HOME/.claude"
 				backup_conflict "$HOME/.claude/settings.json"
 			fi
 			if log_cmd "$indent" stow -v -t "$HOME" -d "$repo_dir" "$pkg"

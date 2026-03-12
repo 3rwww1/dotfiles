@@ -1,11 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ln:*)"
+      "Bash(ln:*)",
+      "Bash(brew:*)",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(stow:*)",
+      "WebFetch(domain:github.com)"
     ],
     "defaultMode": "acceptEdits"
   },
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true
-  }
+  },
+  "model": "opus"
 }
