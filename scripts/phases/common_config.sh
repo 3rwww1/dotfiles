@@ -83,6 +83,15 @@ stow_dotfiles() {
 			then
 				mkdir -p "$HOME/.config/aws-sso"
 			fi
+			if [ "$pkg" = "cursor" ]
+			then
+				# Prevent stow from folding Cursor's app support dir
+				mkdir -p "$HOME/Library/Application Support/Cursor/User"
+			fi
+			if [ "$pkg" = "ghostty" ]
+			then
+				mkdir -p "$HOME/Library/Application Support/com.mitchellh.ghostty"
+			fi
 			if log_cmd "$indent" stow -v -t "$HOME" -d "$repo_dir" "$pkg"
 			then
 				log_pass "stowed $pkg" "$indent"

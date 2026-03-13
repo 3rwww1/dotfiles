@@ -12,6 +12,13 @@ endif
 set runtimepath^=~/.local/share/nvim/lazy/lazy.nvim
 
 lua << EOF
+-- Set leader key before plugins load
+vim.g.mapleader = " "
+
+-- Disable netrw early (before nvim-tree loads)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 require('lazy').setup({
   {
     'lewis6991/gitsigns.nvim',
@@ -36,8 +43,132 @@ require('lazy').setup({
       require("0x96f").setup()
       vim.cmd.colorscheme("0x96f")
     end,
-  }
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup({
+        view = {
+          width = 35,
+        },
+        renderer = {
+          icons = {
+            show = {
+              file = true,
+              folder = true,
+              git = true,
+            },
+          },
+        },
+        filters = {
+          dotfiles = false,  -- show hidden files
+        },
+        git = {
+          enable = true,
+          ignore = false,    -- show .gitignored files (dimmed)
+        },
+      })
+    end,
+  },
+  -- Terminal (for shell + Claude Code)
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        open_mapping = [[<C-\>]],
+        direction = "horizontal",
+        size = 20,
+        shade_terminals = true,
+      })
+
+      -- Named terminal for Claude Code
+      local Terminal = require("toggleterm.terminal").Terminal
+      local claude = Terminal:new({
+        cmd = "claude",
+        direction = "vertical",
+        dir = "git_dir",
+        close_on_exit = false,
+      })
+      vim.keymap.set("n", "<leader>cc", function() claude:toggle() end, { desc = "Toggle Claude Code" })
+    end,
+  },
+
+  -- Claude Code IDE integration (WebSocket protocol)
+  {
+    "coder/claudecode.nvim",
+    config = function()
+      require("claudecode").setup()
+    end,
+  },
+
+  -- LSP: auto-install language servers
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "gopls",           -- Go
+          "rust_analyzer",   -- Rust
+          "pyright",         -- Python
+          "ruby_lsp",        -- Ruby
+          "bashls",          -- Bash
+          "terraformls",     -- Terraform
+        },
+      })
+    end,
+  },
+
+  -- LSP: config for each language server
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
+    config = function()
+      -- Shared keymaps: these activate when an LSP attaches to a buffer
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(ev)
+          local opts = { buffer = ev.buf }
+
+          -- Navigation
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)         -- go to definition
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)         -- find references
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)     -- go to implementation
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)               -- show docs popup
+
+          -- Refactoring
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)           -- rename symbol
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)      -- code actions
+          vim.keymap.set("n", "<leader>fm", function()                          -- format file
+            vim.lsp.buf.format({ async = true })
+          end, opts)
+
+          -- Diagnostics
+          vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+          vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+          vim.keymap.set("n", "<leader>dd", vim.diagnostic.open_float, opts)    -- show error detail
+        end,
+      })
+
+      -- Enable each server (nvim 0.11+ native API)
+      local servers = { "gopls", "rust_analyzer", "pyright", "ruby_lsp", "bashls", "terraformls" }
+      for _, server in ipairs(servers) do
+        vim.lsp.enable(server)
+      end
+    end,
+  },
 })
+
+-- Keymaps
+vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree" })
+vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<cr>", { desc = "Find current file in tree" })
 EOF
 
 highlight Normal ctermbg=NONE guibg=NONE

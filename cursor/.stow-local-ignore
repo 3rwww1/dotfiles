@@ -1,2 +1,3 @@
 ^extensions\.txt$
 ^\.DS_Store$
+^\.gitignore$
