@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(bash install.sh:*)",
-      "Bash(*)"
+      "Bash(*)",
+      "mcp__claude_ai_Linear__list_teams",
+      "mcp__claude_ai_Notion__notion-search",
+      "mcp__claude_ai_Slack__slack_search_channels",
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)"
     ]
   }
 }

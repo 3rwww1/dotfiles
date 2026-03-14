@@ -1,3 +1,12 @@
+# Auto-attach to tmux "default" session
+if command -v tmux >/dev/null 2>&1 \
+  && [ -z "$TMUX" ] \
+  && [ -z "$INSIDE_EMACS" ] \
+  && [ "$TERM_PROGRAM" != "vscode" ] \
+  && [[ -o interactive ]]; then
+  exec tmux new-session -A -s default
+fi
+
 ### Runtime managers first
 eval "$(direnv hook zsh)"
 eval "$(mise activate zsh)"
@@ -63,6 +72,15 @@ fi
 eval "$(zoxide init zsh)"
 
 eval "$(atuin init zsh --disable-up-arrow)"
+
+# History
+HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt share_history
+setopt inc_append_history
+setopt hist_ignore_dups
+setopt hist_ignore_space
 
 # LS replacement (exa), paging (bat), search (rg), process viewer (htop)
 alias ls='eza --group-directories-first --git --icons=always $@'
