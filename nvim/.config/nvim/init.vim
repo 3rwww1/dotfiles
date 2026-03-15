@@ -60,6 +60,7 @@ require('lazy').setup({
           icons_enabled = true,
           section_separators = '',
           component_separators = '',
+          disabled_filetypes = { statusline = { 'NvimTree' } },
         },
       })
     end,
@@ -83,6 +84,11 @@ require('lazy').setup({
       vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#808080", bg = "NONE" })
       vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { fg = "#808080", bg = "NONE" })
       vim.api.nvim_set_hl(0, "NvimTreeVertSplit", { fg = "#808080", bg = "NONE" })
+      -- Match eza colors (Ghostty ANSI palette)
+      vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", { fg = "#81a2be" })
+      vim.api.nvim_set_hl(0, "NvimTreeFolderName", { fg = "#81a2be" })
+      vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", { fg = "#81a2be", bold = true })
+      vim.api.nvim_set_hl(0, "NvimTreeExecFile", { fg = "#b5bd68", bold = true })
     end,
   },
   {
