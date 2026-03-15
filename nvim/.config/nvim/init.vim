@@ -22,14 +22,47 @@ vim.g.loaded_netrwPlugin = 1
 require('lazy').setup({
   {
     'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = { add = {text = '+'}, change = {text = '~'}, delete = {text = '_'}, topdelete = {text = '‾'}, changedelete = {text = '~'} },
-    },
+    config = function()
+      require('gitsigns').setup({
+        signs = { add = {text = '+'}, change = {text = '~'}, delete = {text = '_'}, topdelete = {text = '‾'}, changedelete = {text = '~'}, untracked = {text = '?'} },
+        sign_priority = 6,
+        attach_to_untracked = true,
+        on_attach = function(bufnr)
+          local gs = require('gitsigns')
+          local opts = function(desc) return { buffer = bufnr, desc = desc } end
+          vim.keymap.set('n', ']c', function() gs.nav_hunk('next') end, opts('Next hunk'))
+          vim.keymap.set('n', '[c', function() gs.nav_hunk('prev') end, opts('Prev hunk'))
+          vim.keymap.set('n', '<leader>hp', gs.preview_hunk, opts('Preview hunk'))
+          vim.keymap.set('n', '<leader>hs', gs.stage_hunk, opts('Stage hunk'))
+          vim.keymap.set('n', '<leader>hr', gs.reset_hunk, opts('Reset hunk'))
+          vim.keymap.set('n', '<leader>hb', function() gs.blame_line({ full = true }) end, opts('Blame line'))
+        end,
+      })
+    end,
   },
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = { options = { theme = 'auto', icons_enabled = true } },
+    config = function()
+      local grey = { fg = '#cccccc', bg = '#303030' }
+      local gold = { fg = '#262427', bg = '#af8700', gui = 'bold' }
+      local theme = {
+        normal   = { a = gold, b = grey, c = grey },
+        insert   = { a = gold, b = grey, c = grey },
+        visual   = { a = gold, b = grey, c = grey },
+        replace  = { a = gold, b = grey, c = grey },
+        command  = { a = gold, b = grey, c = grey },
+        inactive = { a = grey, b = grey, c = grey },
+      }
+      require('lualine').setup({
+        options = {
+          theme = theme,
+          icons_enabled = true,
+          section_separators = '',
+          component_separators = '',
+        },
+      })
+    end,
   },
   {
     "numToStr/Comment.nvim",
@@ -42,6 +75,14 @@ require('lazy').setup({
     config = function()
       require("0x96f").setup()
       vim.cmd.colorscheme("0x96f")
+      -- Override after colorscheme: transparent bg + white separator
+      local transparent = { "Normal", "NormalNC", "NvimTreeNormal", "NvimTreeNormalNC", "NvimTreeEndOfBuffer", "SignColumn", "EndOfBuffer" }
+      for _, g in ipairs(transparent) do
+        vim.api.nvim_set_hl(0, g, { bg = "NONE" })
+      end
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#808080", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { fg = "#808080", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "NvimTreeVertSplit", { fg = "#808080", bg = "NONE" })
     end,
   },
   {
@@ -167,8 +208,18 @@ require('lazy').setup({
 })
 
 -- Keymaps
+-- Use system clipboard for yank/paste
+vim.o.clipboard = "unnamedplus"
+
+-- Always show sign column so gitsigns are visible
+vim.o.signcolumn = "yes"
+
+-- Auto-reload files changed externally
+vim.o.autoread = true
+vim.o.updatetime = 1000
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold"}, { command = "checktime" })
+
 vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree" })
 vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<cr>", { desc = "Find current file in tree" })
-EOF
 
-highlight Normal ctermbg=NONE guibg=NONE
+EOF

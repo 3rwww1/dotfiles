@@ -149,3 +149,6 @@ fi
 
 # Starship prompt should go last
 eval "$(starship init zsh)"
+
+# Tip of the day
+[ -f ~/.zsh_tips ] && source ~/.zsh_tips
