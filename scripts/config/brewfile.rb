@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 tap 'aquasecurity/trivy'
+tap 'temporalio/brew'
 tap 'timescale/tap'
 
 brew 'actionlint'
@@ -49,6 +50,7 @@ brew 'sqlcipher'
 brew 'starship'
 brew 'stow'
 brew 'temporal'
+brew 'temporalio/brew/tcld'
 brew 'timg'
 brew 'timescale/tap/timescaledb-tools'
 brew 'terminal-notifier'

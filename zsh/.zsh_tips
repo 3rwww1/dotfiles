@@ -27,6 +27,15 @@ _tips=(
   "rg: rg -t py pattern — restrict to Python files (also: js, go, rb, tf...)"
   "rg: rg -C3 pattern — show 3 lines of context around matches"
   "rg: rg --glob '!vendor' pattern — exclude directories from search"
+  "k: k get pods -w — watch pods in real time"
+  "k: k logs -f pod-name — stream logs from a pod"
+  "k: k exec -it pod-name -- sh — shell into a running pod"
+  "k: k get events --sort-by=.lastTimestamp — recent cluster events"
+  "k: k top pods — CPU/memory usage per pod"
+  "k: k rollout restart deploy/name — rolling restart without downtime"
+  "k: k config get-contexts — list available clusters/contexts"
+  "k: kns namespace — switch namespace (alias for kubectl config set-context)"
+  "k: k9s — TUI dashboard for Kubernetes (press : to switch resources)"
 )
 figlet -f small "TIP OF THE SHELL" | lolcat -f
 print -P "%F{178}💡 ${_tips[RANDOM % ${#_tips[@]} + 1]}%f"
