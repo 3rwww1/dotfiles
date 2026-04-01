@@ -34,8 +34,11 @@ _tips=(
   "k: k top pods — CPU/memory usage per pod"
   "k: k rollout restart deploy/name — rolling restart without downtime"
   "k: k config get-contexts — list available clusters/contexts"
-  "k: kns namespace — switch namespace (alias for kubectl config set-context)"
-  "k: k9s — TUI dashboard for Kubernetes (press : to switch resources)"
+  "kctx: kubectx — fuzzy switch Kubernetes context (with fzf)"
+  "kns: kubens — fuzzy switch Kubernetes namespace (with fzf)"
+  "k9s: press : to switch resources, /pattern to filter, ctrl+d to describe"
+  "k9s: :deploy :svc :pod :ns to jump to resource types"
+  "agent-deck: terminal session manager for AI coding agents"
 )
 figlet -f small "TIP OF THE SHELL" | lolcat -f
 print -P "%F{178}💡 ${_tips[RANDOM % ${#_tips[@]} + 1]}%f"

@@ -9,6 +9,7 @@ export EDITOR=nvim
 export VISUAL=nvim
 export PATH="$HOME/.local/bin:$PATH"
 export BASH_ENV="$HOME/.config/env/common.sh"
+export TIMG_PIXELATION=kitty
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 [ -r "$BASH_ENV" ] && source "$BASH_ENV"

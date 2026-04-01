@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+tap 'asheshgoplani/tap'
 tap 'aquasecurity/trivy'
 tap 'temporalio/brew'
 tap 'timescale/tap'
 
+brew 'asheshgoplani/tap/agent-deck'
 brew 'actionlint'
 brew 'atuin'
 brew 'aws-sso-cli'
@@ -34,6 +36,7 @@ brew 'jq'
 brew 'k9s'
 brew 'kind'
 brew 'kubectl'
+brew 'kubectx'
 brew 'libpq'
 brew 'lolcat'
 brew 'marp-cli'

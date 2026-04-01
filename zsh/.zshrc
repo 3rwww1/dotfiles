@@ -1,12 +1,3 @@
-# Auto-attach to tmux "default" session
-if command -v tmux >/dev/null 2>&1 \
-  && [ -z "$TMUX" ] \
-  && [ -z "$INSIDE_EMACS" ] \
-  && [ "$TERM_PROGRAM" != "vscode" ] \
-  && [[ -o interactive ]]; then
-  exec tmux new-session -A -s default
-fi
-
 ### Runtime managers first
 eval "$(direnv hook zsh)"
 eval "$(mise activate zsh)"
@@ -114,7 +105,8 @@ alias dc='docker-compose'
 
 # Kubernetes & AWS
 alias k='kubectl'
-alias kns='kubectl config set-context --current --namespace'
+alias kctx='kubectx'
+alias kns='kubens'
 alias awsls='aws s3 ls'
 
 # Misc

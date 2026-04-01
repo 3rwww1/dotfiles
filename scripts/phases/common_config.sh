@@ -10,7 +10,7 @@ stow_dotfiles() {
 	packages=(zsh vim nvim git starship editorconfig hl claude aws-sso tmux)
 	if [ "$os_name" = "Darwin" ]
 	then
-		packages+=(cursor ghostty)
+		packages+=(cursor ghostty kitty)
 	fi
 
 	# Backup helper for conflicting dotfiles before stowing
